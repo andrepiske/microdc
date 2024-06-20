@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+lib_path = File.expand_path("../lib", __dir__)
+$:.unshift(lib_path)
+
+require 'microdc'
+require 'debug'
+
+platform = { username: nil, password: nil, serveraddress: nil, registry_url: 'docker.io' }
+
+image_name = 'andrepiske/cn-test'
+image_tag = '0.1.0'
+
+op = Microdc::Op::DockerImages.new(platform)
+
+puts "Probing for image #{image_name}"
+if op.has_local_image?(image_name, image_tag)
+  puts "Image is present, skipping"
+else
+  puts "Pulling image..."
+  success = op.pull_image(image_name, image_tag)
+  puts "success=#{success}"
+end
